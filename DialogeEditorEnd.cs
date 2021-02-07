@@ -1,0 +1,52 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+
+public class DialogeEditorEnd : MonoBehaviour
+{
+    public TextMeshProUGUI textDisplay;
+    int index;
+    public string[] sentences;
+    public float typingSpeed;
+
+    public GameObject continueButton;
+
+    public void Start()
+    {
+        StartCoroutine(Type());
+    }
+
+    private void Update()
+    {
+        if(textDisplay.text == sentences[index])
+            continueButton.SetActive(true);
+    }
+
+    IEnumerator Type()
+    {
+        foreach (char letter in sentences[index].ToCharArray())
+        {
+            textDisplay.text += letter;
+            yield return new WaitForSeconds(typingSpeed);
+        }
+    }
+
+    public void NextSentence()
+    {
+        continueButton.SetActive(false);
+
+        if (index < sentences.Length - 1)
+        {
+            index++;
+            textDisplay.text = "";
+            StartCoroutine(Type());
+        }
+        else
+        {
+            textDisplay.text = "";
+            continueButton.SetActive(false);
+            Application.Quit();
+        }
+    }
+}
